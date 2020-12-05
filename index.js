@@ -1,11 +1,14 @@
 const fs = require('fs');
 
-const day_one = () => {
+const day_1 = () => {
 
-    let solutionPartOne;
-    let solutionPartTwo;
+    let solutionPartOne = 0;
+    let solutionPartTwo = 0;
 
-    const stringInputs = fs.readFileSync('./inputs/day_1').toString().split('\n');
+    // read input from file
+    const stringInputs = fs.readFileSync('./inputs/day_1', 'utf-8')
+        .toString()
+        .split('\n');
     const inputs = stringInputs.map((input) => {
         return parseInt(input);
     });
@@ -28,11 +31,13 @@ const day_one = () => {
     console.log('Day 1, Part 2:', solutionPartTwo);
 };
 
-const day_two = () => {
+const day_2 = () => {
     let validPasswordsPart1 = 0;
     let validPasswordsPart2 = 0;
     // read input from file
-    const input = fs.readFileSync('./inputs/day_2').toString().split('\n');
+    const input = fs.readFileSync('./inputs/day_2', 'utf-8')
+        .toString()
+        .split('\n');
     // remove last empty line
     input.pop();
 
@@ -45,13 +50,13 @@ const day_two = () => {
         let lower = parseInt(line.substr(0, line.indexOf('-')));
         let match = policy.charAt(policy.length - 1);
 
-        console.log('---------------------------------------------');
-        console.log('line', line);
-        console.log('password: ', password);
-        console.log('policy: ', policy);
-        console.log('upper: ', upper);
-        console.log('lower: ', lower);
-        console.log('match: ', match);
+        // console.log('---------------------------------------------');
+        // console.log('line', line);
+        // console.log('password: ', password);
+        // console.log('policy: ', policy);
+        // console.log('upper: ', upper);
+        // console.log('lower: ', lower);
+        // console.log('match: ', match);
 
         let occurrences = 0;
         passwordCharArray.forEach((char, index) => {
@@ -59,8 +64,8 @@ const day_two = () => {
                 occurrences += 1;
             }
         });
-        console.log('occurrences: ', occurrences);
-        console.log('---------------------------------------------');
+        // console.log('occurrences: ', occurrences);
+        // console.log('---------------------------------------------');
 
         // part 1
         if ((lower <= occurrences) && (occurrences <= upper)) {
@@ -78,5 +83,59 @@ const day_two = () => {
     console.log('Day 2, Part 2: ', validPasswordsPart2);
 };
 
-// day_one();
-day_two();
+const day_3 = () => {
+    let solutionPart1 = 0;
+    let solutionPart2 = 0;
+
+    const rows = fs.readFileSync('./inputs/day_3', 'utf-8')
+        .toString()
+        .split('\n')
+        .map(x => x.split(''));
+
+    const lineWidth = rows[0].length;
+
+    const traverse = ({right, down}) => {
+        let trees = 0;
+        let step = 0;
+
+        for (let i = 0; i < rows.length; i += down) {
+            if (rows[i][step % lineWidth] === '#') {
+                trees += 1;
+            }
+            step += right;
+        }
+
+        return trees;
+    };
+
+    const sleds = [
+        { right: 1, down: 1 },
+        { right: 3, down: 1 },
+        { right: 5, down: 1 },
+        { right: 7, down: 1 },
+        { right: 1, down: 2 },
+    ];
+
+    solutionPart1 = traverse(sleds[1]);
+    console.log('Day 3, Part 1: ', solutionPart1);
+
+    let sledTrees = [];
+    sleds.forEach((sled) => {
+        sledTrees.push(traverse(sled));
+    });
+
+    sledTrees.forEach((trees, index) => {
+        if (index === 0) {
+            solutionPart2 = trees;
+        } else {
+            solutionPart2 *= trees;
+        }
+    });
+
+    console.log('Day 3, Part 2: ', solutionPart2);
+};
+
+// day_1();
+// day_2();
+day_3();
+
